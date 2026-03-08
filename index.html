@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>زوامل عيسى الليث</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- تصميم احترافي Galaxy S25 Ultra --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Cairo', sans-serif; background-color: #0a0a0a; margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+
+        #phone-frame { width: 100%; max-width: 400px; height: 100%; max-height: 880px; background-color: #000; border-radius: 40px; border: 10px solid #1a1a1a; box-shadow: 0 0 30px rgba(0,0,0,0.8); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        
+        .status-bar { height: 25px; background: #000; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 11px; color: white; font-weight: bold; position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+        .camera-hole { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 10px; height: 10px; background: #1a1a1a; border-radius: 50%; }
+        
+        #app-container { flex: 1; background-color: #050505; position: relative; overflow: hidden; display: flex; flex-direction: column; margin-top: 25px; }
+        
+        /* Splash Screen */
+        #splash-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, #1a1a1a, #000); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        .splash-logo { width: 100px; height: 100px; background: linear-gradient(135deg, #d32f2f, #b71c1c); border-radius: 25px; display: flex; justify-content: center; align-items: center; font-size: 50px; color: white; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(211, 47, 47, 0.3); }
+        .splash-title { color: white; font-size: 24px; font-weight: 700; }
+        .splash-sub { color: #666; font-size: 13px; margin-top: 8px; }
+
+        /* Main Screen */
+        #main-screen { display: none; flex-direction: column; height: 100%; }
+        .app-header { padding: 25px 20px 15px; background: transparent; }
+        .app-title { font-size: 26px; font-weight: 800; color: white; margin: 0; }
+        .app-subtitle { font-size: 13px; color: #555; margin-top: 5px; }
+        .years-list { flex: 1; overflow-y: auto; padding: 0 15px 20px; }
+        
+        .year-item { background: linear-gradient(to right, #1a1a1a, #111); margin-bottom: 12px; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.1s; border: 1px solid #222; }
+        .year-item:active { transform: scale(0.98); background: #222; }
+        .year-info { display: flex; align-items: center; }
+        .year-icon { width: 40px; height: 40px; background: #252525; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #d32f2f; font-size: 16px; margin-left: 15px; }
+        .year-text h3 { margin: 0; color: white; font-size: 17px; }
+        .year-text p { margin: 2px 0 0; color: #666; font-size: 11px; }
+
+        /* Player Screen */
+        #player-screen { display: none; flex-direction: column; height: 100%; background: #050505; }
+        .player-header { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #111; background: #0a0a0a; }
+        .back-btn { background: none; border: none; color: #d32f2f; font-size: 20px; cursor: pointer; padding-left: 10px; }
+        .header-title { color: white; font-size: 17px; font-weight: bold; margin-right: 10px; }
+        .audio-list-container { flex: 1; overflow-y: auto; padding: 10px 0; }
+        .audio-item { padding: 12px 20px; display: flex; align-items: center; border-bottom: 1px solid #111; cursor: pointer; }
+        .audio-item:active { background: #151515; }
+        .audio-item.active { background: #151515; border-right: 3px solid #d32f2f; }
+        .audio-item.active .track-title { color: #d32f2f; }
+        .track-num { color: #333; font-size: 12px; width: 20px; margin-left: 15px; text-align: center; }
+        .track-details { flex: 1; }
+        .track-title { color: #ddd; font-size: 14px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Controls */
+        .bottom-player { background: #0a0a0a; padding: 15px 20px 30px; border-top: 1px solid #222; }
+        .now-playing-info { text-align: center; margin-bottom: 15px; height: 40px; }
+        .np-title { color: white; font-weight: bold; display: block; font-size: 15px; }
+        .progress-bar-container { display: flex; align-items: center; margin-bottom: 15px; }
+        .time-start, .time-end { font-size: 10px; color: #444; width: 35px; }
+        .progress-wrapper { flex: 1; height: 3px; background: #222; border-radius: 2px; margin: 0 10px; position: relative; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 3px; background: transparent; position: absolute; top: 0; left: 0; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; background: #d32f2f; border-radius: 50%; margin-top: -3px; }
+        input[type="range"]::-webkit-slider-runnable-track { height: 3px; background: linear-gradient(to left, #d32f2f, #d32f2f) 0% 0% / var(--progress, 0%) no-repeat, #222; border-radius: 2px; }
+        .controls-wrapper { display: flex; justify-content: center; align-items: center; }
+        .ctrl-btn { background: none; border: none; color: white; font-size: 20px; padding: 10px; cursor: pointer; }
+        .play-btn-main { width: 55px; height: 55px; background: #d32f2f; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 20px; box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3); }
+        .play-btn-inner { font-size: 22px; color: white; padding-right: 2px; }
+        .loading-indicator { display: flex; justify-content: center; align-items: center; height: 100%; color: #555; flex-direction: column; }
+        .spinner { border: 3px solid #222; border-top: 3px solid #d32f2f; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div><i class="fas fa-signal"></i><i class="fas fa-wifi" style="margin-left: 5px;"></i><i class="fas fa-battery-full" style="margin-left: 5px;"></i></div>
+            <div class="camera-hole"></div>
+        </div>
+
+        <div id="app-container">
+            <div id="splash-screen">
+                <div class="splash-logo"><i class="fas fa-microphone-alt"></i></div>
+                <div class="splash-title">عيسى الليث</div>
+                <div class="splash-sub">تحديث تلقائي</div>
+            </div>
+
+            <div id="main-screen">
+                <div class="app-header">
+                    <h1 class="app-title">المكتبة الصوتية</h1>
+                    <p class="app-subtitle">آخر تحديث: <span id="last-update">-</span></p>
+                </div>
+                <div class="years-list" id="years-list"></div>
+            </div>
+
+            <div id="player-screen">
+                <div class="player-header">
+                    <button class="back-btn" onclick="showScreen('main')"><i class="fas fa-arrow-right"></i></button>
+                    <span class="header-title" id="player-header-title">الزوامل</span>
+                </div>
+                <div class="audio-list-container" id="audio-list-container"></div>
+                <div class="bottom-player">
+                    <div class="now-playing-info">
+                        <span class="np-title" id="now-playing-title">اختر زاملاً</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <span class="time-start" id="current-time">0:00</span>
+                        <div class="progress-wrapper">
+                            <input type="range" id="seek-bar" value="0" max="100" style="--progress: 0%;">
+                        </div>
+                        <span class="time-end" id="duration-time">0:00</span>
+                    </div>
+                    <div class="controls-wrapper">
+                        <button class="ctrl-btn" onclick="prevAudio()"><i class="fas fa-backward-step"></i></button>
+                        <button class="play-btn-main" id="play-pause-btn" onclick="togglePlay()">
+                            <i class="fas fa-play play-btn-inner"></i>
+                        </button>
+                        <button class="ctrl-btn" onclick="nextAudio()"><i class="fas fa-forward-step"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+
+    <script>
+        // --- متغيرات ---
+        let appData = {};
+        let currentYear = null;
+        let currentIndex = -1;
+        let currentPlaylist = [];
+
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const seekBar = document.getElementById('seek-bar');
+        const yearsListContainer = document.getElementById('years-list');
+        const audioListContainer = document.getElementById('audio-list-container');
+
+        // --- بدء التطبيق ---
+        window.onload = async function() {
+            await loadData();
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('splash-screen').style.display = 'none';
+                    showScreen('main');
+                }, 500);
+            }, 2000);
+        };
+
+        // --- جلب البيانات من ملف JSON ---
+        async function loadData() {
+            try {
+                // جلب البيانات من نفس المصدر (GitHub Pages)
+                const response = await fetch('data.json');
+                if (!response.ok) throw new Error("No data");
+                appData = await response.json();
+                
+                // تحديث تاريخ آخر تحديث
+                const now = new Date();
+                document.getElementById('last-update').innerText = now.toLocaleDateString('ar-EG');
+                
+                generateYears();
+            } catch (error) {
+                console.error(error);
+                // بيانات تجريبية في حال الفشل
+                loadFallbackData();
+                generateYears();
+            }
+        }
+
+        function loadFallbackData() {
+            const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+            years.forEach(y => {
+                appData[y] = [{ title: `زامل تجريبي ${y}`, url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" }];
+            });
+        }
+
+        function showScreen(name) {
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('player-screen').style.display = 'none';
+            if (name === 'main') document.getElementById('main-screen').style.display = 'flex';
+            else document.getElementById('player-screen').style.display = 'flex';
+        }
+
+        function generateYears() {
+            yearsListContainer.innerHTML = '';
+            const sortedYears = Object.keys(appData).sort((a, b) => b - a);
+            if (sortedYears.length === 0) {
+                yearsListContainer.innerHTML = '<div style="text-align:center;color:#555;padding:20px;">لا توجد بيانات</div>';
+                return;
+            }
+            sortedYears.forEach(year => {
+                const count = appData[year].length;
+                const item = document.createElement('div');
+                item.className = 'year-item';
+                item.onclick = () => openYear(year);
+                item.innerHTML = `
+                    <div class="year-info">
+                        <div class="year-icon"><i class="fas fa-folder-open"></i></div>
+                        <div class="year-text">
+                            <h3>زوامل ${year}</h3>
+                            <p>${count} ملفات</p>
+                        </div>
+                    </div>
+                    <div class="arrow-icon"><i class="fas fa-chevron-left"></i></div>
+                `;
+                yearsListContainer.appendChild(item);
+            });
+        }
+
+        function openYear(year) {
+            currentYear = year;
+            currentPlaylist = appData[year];
+            document.getElementById('player-header-title').innerText = `زوامل ${year}`;
+            renderAudioList();
+            showScreen('player');
+        }
+
+        function renderAudioList() {
+            audioListContainer.innerHTML = '';
+            currentPlaylist.forEach((audio, index) => {
+                const item = document.createElement('div');
+                item.className = 'audio-item';
+                if (index === currentIndex) item.classList.add('active');
+                item.innerHTML = `
+                    <div class="track-num">${index + 1}</div>
+                    <div class="track-details"><span class="track-title">${audio.title}</span></div>
+                    <div style="color: #333;"><i class="fas fa-play-circle"></i></div>
+                `;
+                item.onclick = () => playAudio(index);
+                audioListContainer.appendChild(item);
+            });
+        }
+
+        // --- التحكم بالصوت ---
+        function playAudio(index) {
+            if (index < 0 || index >= currentPlaylist.length) return;
+            currentIndex = index;
+            const track = currentPlaylist[index];
+            audioPlayer.src = track.url;
+            audioPlayer.play();
+            updateUI('playing');
+            document.getElementById('now-playing-title').innerText = track.title;
+            renderAudioList();
+        }
+
+        function togglePlay() {
+            if (audioPlayer.paused) {
+                if (currentIndex === -1) playAudio(0);
+                else { audioPlayer.play(); updateUI('playing'); }
+            } else { audioPlayer.pause(); updateUI('paused'); }
+        }
+
+        function updateUI(state) {
+            playPauseBtn.innerHTML = state === 'playing' 
+                ? '<i class="fas fa-pause play-btn-inner"></i>' 
+                : '<i class="fas fa-play play-btn-inner"></i>';
+        }
+
+        function nextAudio() {
+            let next = currentIndex + 1;
+            if (next >= currentPlaylist.length) next = 0;
+            playAudio(next);
+        }
+
+        function prevAudio() {
+            let prev = currentIndex - 1;
+            if (prev < 0) prev = currentPlaylist.length - 1;
+            playAudio(prev);
+        }
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration) {
+                const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                seekBar.value = percent;
+                seekBar.style.setProperty('--progress', percent + '%');
+                document.getElementById('current-time').innerText = formatTime(audioPlayer.currentTime);
+                document.getElementById('duration-time').innerText = formatTime(audioPlayer.duration);
+            }
+        });
+
+        audioPlayer.addEventListener('ended', nextAudio);
+        seekBar.addEventListener('input', () => audioPlayer.currentTime = (seekBar.value / 100) * audioPlayer.duration);
+        
+        function formatTime(s) { const m = Math.floor(s / 60); const sec = Math.floor(s % 60); return `${m}:${sec < 10 ? '0' : ''}${sec}`; }
+    </script>
+</body>
+</html>
