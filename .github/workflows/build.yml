@@ -15,9 +15,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # هذا السطر الجديد يقوم بإنشاء ملفات البناء تلقائياً
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.5  # هنا قمنا بتحديد إصدار مستقر ومتوافق
 
       - name: Build Debug APK
         run: gradle assembleDebug
