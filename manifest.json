@@ -1,0 +1,16 @@
+{
+    "name": "زوامل عيسى الليث",
+    "short_name": "الزوامل",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#d32f2f",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/724/724933.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
