@@ -1,33 +1,19 @@
-name: Update Zawamil Data
-
+name: Build App
 on:
-  schedule:
-    - cron: '0 0 * * *'
   workflow_dispatch:
-
 jobs:
-  scrape:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
-
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
-    - name: Install requirements
-      run: |
-        pip install requests beautifulsoup4
-
-    - name: Run Scraper
-      run: python scraper.py
-
-    - name: Commit and Push
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add data.json
-        git diff --quiet && git diff --staged --quiet || git commit -m "Auto Update Data"
-        git push
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: pip install requests beautifulsoup4
+      - run: python scraper.py
+      - run: |
+          git config user.name "AutoBot"
+          git config user.email "bot@github.com"
+          git add .
+          git commit -m "Update Zawamil" || echo "No changes"
+          git push
