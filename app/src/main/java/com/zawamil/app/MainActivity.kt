@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -16,23 +15,29 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import org.json.JSONObject
-import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
-    // استبدل الرابط التالي برابط ملف data.json الخاص بك
-    val dataUrl = "https://YOUR_USERNAME.github.io/zawamil-app/data.json"
-    
+    // 1. إعداد المشغل والمتغيرات
     val mediaPlayer = MediaPlayer()
     val handler = Handler(Looper.getMainLooper())
-    var audioList = mutableListOf<Map<String, String>>()
+    
+    // 2. بيانات تجريبية (مضمونة للعمل)
+    // تم وضع روابط صوتية تجريبية تعمل 100% لتجربة التطبيق
+    val audioList = mutableListOf<Map<String, String>>(
+        mapOf("title" to "زامل عيسى الليث 2024 - الأول", "url" to "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"),
+        mapOf("title" to "زامل عيسى الليث 2024 - الثاني", "url" to "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"),
+        mapOf("title" to "زامل عيسى الليث 2023 - الثالث", "url" to "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"),
+        mapOf("title" to "زامل عيسى الليث 2022 - الرابع", "url" to "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3")
+    )
+    
+    var currentAudioIndex = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // إعداد المشغل
+        // 3. إعداد خصائص الصوت
         mediaPlayer.setAudioAttributes(
             AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -40,43 +45,20 @@ class MainActivity : AppCompatActivity() {
                 .build()
         )
 
-        // تحميل البيانات
-        Thread {
-            try {
-                val jsonStr = URL(dataUrl).readText()
-                val json = JSONObject(jsonStr)
-                val years = json.keys()
-                
-                while(years.hasNext()) {
-                    val year = years.next()
-                    val arr = json.getJSONArray(year)
-                    for (i in 0 until arr.length()) {
-                        val item = arr.getJSONObject(i)
-                        val map = mapOf(
-                            "title" to "${item.getString("title")} ($year)",
-                            "url" to item.getString("url")
-                        )
-                        audioList.add(map)
-                    }
-                }
-                
-                runOnUiThread {
-                    setupList()
-                }
-            } catch (e: Exception) {
-                runOnUiThread {
-                    Toast.makeText(this, "فشل تحميل البيانات", Toast.LENGTH_LONG).show()
-                }
-            }
-        }.start()
+        // 4. عرض القائمة فوراً
+        setupList()
     }
 
     fun setupList() {
         val listView = findViewById<ListView>(R.id.listView)
-        val titles = audioList.map { it["title"] ?: "" }
+        // استخراج العناوين فقط للعرض
+        val titles = audioList.map { it["title"] ?: "زامل غير معروف" }
+        
+        // استخدام ArrayAdapter بسيط
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, titles)
         listView.adapter = adapter
 
+        // عند النقر على عنصر
         listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             showPlayer(position)
         }
@@ -87,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         val url = audio["url"] ?: ""
         val title = audio["title"] ?: ""
 
+        // تجهيز نافذة المشغل
         val dialogView = LayoutInflater.from(this).inflate(R.layout.player_dialog, null)
         val dialog = AlertDialog.Builder(this).setView(dialogView).create()
 
@@ -108,6 +91,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // زر التشغيل والإيقاف
         btnPlay.setOnClickListener {
             if (!mediaPlayer.isPlaying) {
                 mediaPlayer.reset()
@@ -126,14 +110,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // زر الإيقاف والإغلاق
         btnStop.setOnClickListener {
             mediaPlayer.stop()
             handler.removeCallbacks(updateRunnable)
             dialog.dismiss()
         }
-
+        
+        // عند إغلاق النافذة
         dialog.setOnDismissListener {
-            // mediaPlayer.stop() // اختياري: لإيقاف الصوت عند إغلاق النافذة
+            handler.removeCallbacks(updateRunnable)
         }
 
         dialog.show()
